@@ -13,20 +13,23 @@ def startup_event():
     if settings.use_fluxbase:
         # --- Fluxbase Mode ---
         try:
-            print("DEBUG: Initializing Fluxbase tables...")
+            print("DEBUG: Checking Fluxbase connection...")
             from app.db.fluxbase import initialize_fluxbase_tables, get_fluxbase_client
             client = get_fluxbase_client()
             if client.health_check():
                 initialize_fluxbase_tables()
                 print("DEBUG: Fluxbase ready - OK")
             else:
-                print("WARNING: Fluxbase health check failed. Check your API key / project ID.")
+                print("WARNING: Fluxbase is unreachable or timing out. Seamlessly switching to local SQLite database...")
+                settings.disable_fluxbase()
         except Exception as e:
-            print(f"Fluxbase setup failed: {e}")
-    else:
+            print(f"Fluxbase setup failed ({e}). Seamlessly switching to local SQLite database...")
+            settings.disable_fluxbase()
+
+    if not settings.use_fluxbase:
         # --- SQLite Fallback Mode ---
         try:
-            print("DEBUG: Fluxbase credentials not set. Using SQLite fallback...")
+            print("DEBUG: Using local SQLite database (plagiascan.db)...")
             from app.db.session import engine
             from app.models import Base
             Base.metadata.create_all(bind=engine, checkfirst=True)

@@ -147,7 +147,30 @@ class FluxbaseQuery:
         sql = f"SELECT * FROM {self.table_name}{where_str}{order_str}{limit_str};"
         from app.db.fluxbase import get_fluxbase_client
         client = get_fluxbase_client()
-        return client.execute(sql)
+        try:
+            return client.execute(sql)
+        except Exception as e:
+            logger.warning(f"Fluxbase query failed ({e}). Seamlessly falling back to local SQLite...")
+            from app.core.config import settings
+            settings.disable_fluxbase()
+            from app.db.session import OriginalSessionLocal
+            with OriginalSessionLocal() as sqlite_session:
+                q = sqlite_session.query(self.model)
+                for col_name, val in self.filters:
+                    attr = getattr(self.model, col_name, None)
+                    if attr is not None:
+                        q = q.filter(attr == decode_value(val))
+                if self.order_by_col:
+                    attr = getattr(self.model, self.order_by_col, None)
+                    if attr is not None:
+                        q = q.order_by(attr.desc() if self.order_by_desc else attr.asc())
+                if limit:
+                    q = q.limit(limit)
+                rows = []
+                for item in q.all():
+                    row_dict = {col.name: getattr(item, col.name) for col in self.model.__mapper__.columns}
+                    rows.append(row_dict)
+                return rows
 
     def _map_row_to_model(self, row):
         obj_id = row.get("id")

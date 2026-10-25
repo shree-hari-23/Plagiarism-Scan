@@ -556,68 +556,127 @@ export default function Report() {
 
                                 {/* Scoreboard 2: AI Generated Content Probability */}
                                 {aiDetection ? (
-                                    <div className="bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 rounded-2xl p-6 sm:p-7 border-2 border-violet-200 shadow-sm flex flex-col justify-between">
-                                        <div>
-                                            <div className="flex items-center justify-between gap-2 mb-3">
-                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/80 border border-violet-200 text-violet-700 shadow-sm">
-                                                    <Bot className="h-3.5 w-3.5 text-violet-600" />
-                                                    5-Signal NLP AI Detection
-                                                </span>
-                                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
-                                                    aiDetection.ai_probability >= 70
-                                                        ? 'bg-purple-100 text-purple-800 border-purple-300'
-                                                        : aiDetection.ai_probability >= 40
-                                                            ? 'bg-amber-100 text-amber-800 border-amber-300'
-                                                            : 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                                }`}>
-                                                    {aiDetection.label}
-                                                </span>
-                                            </div>
+                                    aiDetection.status === 'insufficient_text' || aiDetection.ai_probability === null ? (
+                                        <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50 rounded-2xl p-6 sm:p-7 border-2 border-amber-200 shadow-sm flex flex-col justify-between">
+                                            <div>
+                                                <div className="flex items-center justify-between gap-2 mb-3">
+                                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/80 border border-amber-200 text-amber-700 shadow-sm">
+                                                        <Bot className="h-3.5 w-3.5 text-amber-600" />
+                                                        AI Detection Notice
+                                                    </span>
+                                                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold border bg-amber-100 text-amber-800 border-amber-300">
+                                                        {aiDetection.label || 'Insufficient Text'}
+                                                    </span>
+                                                </div>
 
-                                            <p className="text-xs font-semibold text-violet-600 uppercase tracking-wider">AI Content Probability</p>
-                                            <div className="flex items-baseline gap-2 mt-1 mb-2">
-                                                <p className="text-5xl sm:text-6xl font-extrabold text-violet-700">
-                                                    {aiDetection.ai_probability}%
+                                                <p className="text-xs font-semibold text-amber-600 uppercase tracking-wider">Sample Size Requirement</p>
+                                                <div className="flex items-baseline gap-2 mt-1 mb-2">
+                                                    <p className="text-2xl sm:text-3xl font-extrabold text-amber-800">
+                                                        &lt; 150 Words
+                                                    </p>
+                                                </div>
+
+                                                <p className="text-sm font-medium text-amber-900 leading-snug">
+                                                    {aiDetection.description || 'Document contains fewer than 150 words. Statistical stylometry requires a larger sample for dependable evaluation.'}
                                                 </p>
                                             </div>
 
-                                            {/* Probability Meter Bar */}
-                                            <div className="w-full bg-violet-200/60 rounded-full h-2.5 mb-3 overflow-hidden">
-                                                <div
-                                                    className="bg-gradient-to-r from-indigo-600 to-purple-600 h-2.5 rounded-full transition-all duration-500"
-                                                    style={{ width: `${aiDetection.ai_probability}%` }}
-                                                ></div>
+                                            <div className="mt-5 pt-4 border-t border-amber-200/80 text-xs text-amber-800/80">
+                                                <span>Submitted words: <strong>{aiDetection.word_count ?? 'N/A'}</strong> &bull; Minimum required: <strong>150 words</strong></span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 rounded-2xl p-6 sm:p-7 border-2 border-violet-200 shadow-sm flex flex-col justify-between">
+                                            <div>
+                                                <div className="flex items-center justify-between gap-2 mb-3">
+                                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/80 border border-violet-200 text-violet-700 shadow-sm">
+                                                        <Bot className="h-3.5 w-3.5 text-violet-600" />
+                                                        Calibrated AI Stylometrics
+                                                    </span>
+                                                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                                                        aiDetection.ai_probability >= 65
+                                                            ? 'bg-purple-100 text-purple-800 border-purple-300'
+                                                            : aiDetection.ai_probability >= 35
+                                                                ? 'bg-amber-100 text-amber-800 border-amber-300'
+                                                                : 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                                    }`}>
+                                                        {aiDetection.label}
+                                                    </span>
+                                                </div>
+
+                                                <p className="text-xs font-semibold text-violet-600 uppercase tracking-wider">AI Content Probability</p>
+                                                <div className="flex items-baseline gap-2 mt-1 mb-2">
+                                                    <p className="text-5xl sm:text-6xl font-extrabold text-violet-700">
+                                                        {aiDetection.ai_probability}%
+                                                    </p>
+                                                    {aiDetection.confidence && (
+                                                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-violet-100 text-violet-700 border border-violet-200 uppercase">
+                                                            {aiDetection.confidence} confidence
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {/* Probability Meter Bar */}
+                                                <div className="w-full bg-violet-200/60 rounded-full h-2.5 mb-3 overflow-hidden">
+                                                    <div
+                                                        className="bg-gradient-to-r from-indigo-600 to-purple-600 h-2.5 rounded-full transition-all duration-500"
+                                                        style={{ width: `${Math.min(100, Math.max(0, aiDetection.ai_probability))}%` }}
+                                                    ></div>
+                                                </div>
+
+                                                <p className="text-sm font-medium text-gray-700 leading-snug">
+                                                    {aiDetection.description || (
+                                                        aiDetection.ai_probability >= 65
+                                                            ? '🤖 Strong AI-style patterns detected: high syntactic predictability, uniform cadence, and characteristic rhetorical markers.'
+                                                            : aiDetection.ai_probability >= 35
+                                                                ? '⚡ Mixed signals: contains a blend of structured drafting and authentic human variation.'
+                                                                : '✍ Authentic human prose: organic sentence-length variation, natural colloquialisms, and diverse vocabulary.'
+                                                    )}
+                                                </p>
                                             </div>
 
-                                            <p className="text-sm font-medium text-gray-700 leading-snug">
-                                                {aiDetection.ai_probability >= 70
-                                                    ? '🤖 Highly Synthetic — Multiple machine-generated markers and robotic uniformity detected.'
-                                                    : aiDetection.ai_probability >= 40
-                                                        ? '⚡ Mixed Style — Blend of AI-assisted drafting and natural human adjustments.'
-                                                        : '✍ Natural Human — Organic burstiness and varied sentence cadence confirmed.'}
+                                            {/* Granular AI Signals */}
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-violet-200 text-xs">
+                                                <div>
+                                                    <span className="text-gray-500">LLM Hallmarks:</span>
+                                                    <p className="text-sm font-bold text-violet-700">
+                                                        {aiDetection.details?.hallmark_hits !== undefined
+                                                            ? `${aiDetection.details.hallmark_hits} hits`
+                                                            : (aiDetection.details?.transition_word_score !== undefined ? `${aiDetection.details.transition_word_score}%` : '0 hits')}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Burstiness:</span>
+                                                    <p className="text-sm font-bold text-violet-700">
+                                                        {aiDetection.details?.burstiness_score !== undefined
+                                                            ? `${aiDetection.details.burstiness_score}%`
+                                                            : (aiDetection.details?.burstiness_raw !== undefined ? `${aiDetection.details.burstiness_raw}` : 'n/a')}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Formality:</span>
+                                                    <p className="text-sm font-bold text-violet-700">
+                                                        {aiDetection.details?.formality_score !== undefined
+                                                            ? `${aiDetection.details.formality_score}%`
+                                                            : (aiDetection.details?.informality_score !== undefined ? `${100 - aiDetection.details.informality_score}%` : 'n/a')}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Avg Sentence:</span>
+                                                    <p className="text-sm font-bold text-violet-700">
+                                                        {aiDetection.details?.avg_sentence_length !== undefined
+                                                            ? `${aiDetection.details.avg_sentence_length} w`
+                                                            : 'n/a'}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Academic Responsibility Disclaimer */}
+                                            <p className="text-[10px] text-gray-400 mt-3 italic">
+                                                * Note: AI probability represents statistical stylometric similarity and must not be used as the sole determinant for academic integrity violations.
                                             </p>
                                         </div>
-
-                                        {/* Granular AI Signals */}
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-violet-200 text-xs">
-                                            <div>
-                                                <span className="text-gray-500">LLM Hallmarks:</span>
-                                                <p className="text-sm font-bold text-violet-700">{aiDetection.details?.transition_word_score ?? 0}% hits</p>
-                                            </div>
-                                            <div>
-                                                <span className="text-gray-500">Burstiness:</span>
-                                                <p className="text-sm font-bold text-violet-700">{aiDetection.details?.burstiness_score ?? 0}%</p>
-                                            </div>
-                                            <div>
-                                                <span className="text-gray-500">Formality:</span>
-                                                <p className="text-sm font-bold text-violet-700">{aiDetection.details?.informality_score ?? 0}%</p>
-                                            </div>
-                                            <div>
-                                                <span className="text-gray-500">Avg Sentence:</span>
-                                                <p className="text-sm font-bold text-violet-700">{aiDetection.details?.avg_sentence_length ?? 0} w</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    )
                                 ) : (
                                     <div className="bg-gray-50 rounded-2xl p-6 border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-sm">
                                         AI evaluation completed
@@ -908,68 +967,96 @@ export default function Report() {
                                                 </div>
 
                                                 {/* Category Specific Proof details */}
-                                                {selectedLine.category === 'web' && selectedLine.web_proof && (
-                                                    <div className="space-y-3 pt-2">
-                                                        <div className="bg-red-50 border border-red-200 rounded-xl p-3.5">
-                                                            <div className="flex items-center justify-between gap-2 mb-2">
-                                                                <span className="text-xs font-bold text-red-900 flex items-center gap-1.5">
-                                                                    <Globe className="h-3.5 w-3.5 text-red-600" />
-                                                                    Verified Web Source
-                                                                </span>
-                                                                <span className="text-[11px] font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded">
-                                                                    {selectedLine.web_proof.match_type || 'Exact Match'}
-                                                                </span>
-                                                            </div>
-                                                            <p className="text-xs font-bold text-gray-900 mb-1">{selectedLine.web_proof.source_title}</p>
-                                                            <p className="text-xs text-gray-600 line-clamp-3 italic mb-3 bg-white p-2 rounded border border-red-100">
-                                                                "{selectedLine.web_proof.snippet}"
-                                                            </p>
+                                                {(selectedLine.category === 'web' || selectedLine.web_proof) && selectedLine.web_proof && (() => {
+                                                    const isPossibleSource = selectedLine.web_proof.verification_status === 'POSSIBLE_RELATED_SOURCE' || selectedLine.web_proof.match_type === 'semantic';
+                                                    return (
+                                                        <div className="space-y-3 pt-2">
+                                                            <div className={`border rounded-xl p-3.5 ${isPossibleSource ? 'bg-amber-50 border-amber-200' : 'bg-red-50 border-red-200'}`}>
+                                                                <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                                                                    <span className={`text-xs font-bold flex items-center gap-1.5 ${isPossibleSource ? 'text-amber-900' : 'text-red-900'}`}>
+                                                                        <Globe className={`h-3.5 w-3.5 ${isPossibleSource ? 'text-amber-600' : 'text-red-600'}`} />
+                                                                        {isPossibleSource ? 'POSSIBLE SOURCE' : 'WEB MATCH'}
+                                                                    </span>
+                                                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                                                        {selectedLine.web_proof.matched_words > 0 && !isPossibleSource && (
+                                                                            <span className="text-[11px] font-semibold text-gray-700 bg-white border border-gray-200 px-2 py-0.5 rounded">
+                                                                                Continuous: {selectedLine.web_proof.matched_words} words
+                                                                            </span>
+                                                                        )}
+                                                                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded ${isPossibleSource ? 'text-amber-800 bg-amber-100' : 'text-red-700 bg-red-100'}`}>
+                                                                            {isPossibleSource ? 'Semantic similarity' : (selectedLine.web_proof.match_type === 'exact' ? 'Exact N-gram' : (selectedLine.web_proof.match_type || 'Exact N-gram'))}
+                                                                        </span>
+                                                                        {!isPossibleSource && selectedLine.web_proof.confidence && (
+                                                                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+                                                                                {selectedLine.web_proof.confidence}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
 
-                                                            {/* Action Buttons: Open Link, Side-by-Side Comparator, Fix & Cite */}
-                                                            <div className="flex flex-wrap items-center gap-2">
-                                                                {selectedLine.web_proof.source_url && (
-                                                                    <a
-                                                                        href={selectedLine.web_proof.source_url}
-                                                                        target="_blank"
-                                                                        rel="noreferrer"
-                                                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg shadow-sm transition-all"
-                                                                    >
-                                                                        <span>Open Web Link</span>
-                                                                        <ExternalLink className="h-3.5 w-3.5" />
-                                                                    </a>
+                                                                <p className="text-xs font-bold text-gray-900 mb-1">{selectedLine.web_proof.source_title}</p>
+                                                                <p className={`text-xs line-clamp-3 italic mb-3 bg-white p-2 rounded border ${isPossibleSource ? 'text-amber-900 border-amber-100' : 'text-gray-600 border-red-100'}`}>
+                                                                    "{selectedLine.web_proof.snippet}"
+                                                                </p>
+
+                                                                {isPossibleSource && (
+                                                                    <div className="mb-3 text-[11px] text-amber-800 bg-amber-100/70 p-2 rounded border border-amber-200 flex flex-col gap-0.5">
+                                                                        <span className="font-bold">Exact Textual Overlap: Insufficient</span>
+                                                                        <span>This page may discuss similar information, but direct copying was not verified.</span>
+                                                                    </div>
+                                                                )}
+                                                                {!isPossibleSource && (
+                                                                    <p className="text-[11px] text-emerald-700 font-medium mb-3 flex items-center gap-1">
+                                                                        <CheckCircle className="h-3 w-3 inline" /> Direct textual overlap verified.
+                                                                    </p>
                                                                 )}
 
-                                                                {/* Side-by-Side Comparator Button */}
-                                                                <button
-                                                                    onClick={() => setComparatorData({
-                                                                        suspectText: selectedLine.text,
-                                                                        sourceText: selectedLine.web_proof.snippet,
-                                                                        sourceTitle: selectedLine.web_proof.source_title,
-                                                                        sourceUrl: selectedLine.web_proof.source_url,
-                                                                        matchType: selectedLine.web_proof.match_type || 'Verbatim Match'
-                                                                    })}
-                                                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm transition-all"
-                                                                >
-                                                                    <Split className="h-3.5 w-3.5" />
-                                                                    <span>Compare Side-by-Side</span>
-                                                                </button>
+                                                                {/* Action Buttons: Open Link, Side-by-Side Comparator, Fix & Cite */}
+                                                                <div className="flex flex-wrap items-center gap-2">
+                                                                    {selectedLine.web_proof.source_url && (
+                                                                        <a
+                                                                            href={selectedLine.web_proof.source_url}
+                                                                            target="_blank"
+                                                                            rel="noreferrer"
+                                                                            className={`inline-flex items-center gap-1.5 text-xs font-bold text-white px-3 py-1.5 rounded-lg shadow-sm transition-all ${isPossibleSource ? 'bg-amber-600 hover:bg-amber-700' : 'bg-red-600 hover:bg-red-700'}`}
+                                                                        >
+                                                                            <span>Open Web Link</span>
+                                                                            <ExternalLink className="h-3.5 w-3.5" />
+                                                                        </a>
+                                                                    )}
 
-                                                                {/* 1-Click Fix & Cite Button */}
-                                                                <button
-                                                                    onClick={() => setCiteModalData({
-                                                                        sentence: selectedLine.text,
-                                                                        title: selectedLine.web_proof.source_title,
-                                                                        url: selectedLine.web_proof.source_url
-                                                                    })}
-                                                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 px-3 py-1.5 rounded-lg shadow-sm transition-all"
-                                                                >
-                                                                    <Sparkles className="h-3.5 w-3.5" />
-                                                                    <span>Fix &amp; Cite</span>
-                                                                </button>
+                                                                    {/* Side-by-Side Comparator Button */}
+                                                                    <button
+                                                                        onClick={() => setComparatorData({
+                                                                            suspectText: selectedLine.text,
+                                                                            sourceText: selectedLine.web_proof.snippet,
+                                                                            sourceTitle: selectedLine.web_proof.source_title,
+                                                                            sourceUrl: selectedLine.web_proof.source_url,
+                                                                            matchType: isPossibleSource ? 'Semantic Similarity' : (selectedLine.web_proof.match_type || 'Verbatim Match')
+                                                                        })}
+                                                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-3 py-1.5 rounded-lg shadow-sm transition-all"
+                                                                    >
+                                                                        <Split className="h-3.5 w-3.5" />
+                                                                        <span>Compare Side-by-Side</span>
+                                                                    </button>
+
+                                                                    {/* 1-Click Fix & Cite Button */}
+                                                                    <button
+                                                                        onClick={() => setCiteModalData({
+                                                                            sentence: selectedLine.text,
+                                                                            title: selectedLine.web_proof.source_title,
+                                                                            url: selectedLine.web_proof.source_url
+                                                                        })}
+                                                                        className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 px-3 py-1.5 rounded-lg shadow-sm transition-all"
+                                                                    >
+                                                                        <Sparkles className="h-3.5 w-3.5" />
+                                                                        <span>Fix &amp; Cite</span>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )}
+                                                    );
+                                                })()}
 
                                                 {selectedLine.category === 'ai' && (
                                                     <div className="space-y-3 pt-2">

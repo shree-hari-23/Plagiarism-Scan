@@ -30,11 +30,31 @@ class Settings(BaseSettings):
     SMTP_PORT: int = 587
     SMTP_USE_SSL: bool = False
 
+    # --- Web Search Providers (Optional) ---
+    BRAVE_API_KEY: Optional[str] = None
+    TAVILY_API_KEY: Optional[str] = None
+
+    # --- Detection Pipeline Settings ---
+    DEFAULT_NGRAM_SIZE: int = 25
+    MAX_URLS_PER_SCAN: int = 30
+    PAGE_FETCH_TIMEOUT: float = 9.0
+    PAGE_CACHE_TTL_SECONDS: int = 3600
+
+    _fluxbase_active: Optional[bool] = None
+
     @property
     def use_fluxbase(self) -> bool:
-        """True if Fluxbase credentials are configured."""
+        """True if Fluxbase credentials are configured and Fluxbase is active."""
+        if self._fluxbase_active is False:
+            return False
         return bool(self.FLUXBASE_API_KEY and self.FLUXBASE_PROJECT_ID and
                     "YOUR_API_KEY" not in (self.FLUXBASE_API_KEY or ""))
+
+    def disable_fluxbase(self):
+        self._fluxbase_active = False
+
+    def enable_fluxbase(self):
+        self._fluxbase_active = True
 
     class Config:
         env_file = ".env"

@@ -1,0 +1,51 @@
+ID,Genre,Ground Truth,Predicted,Correct,AI Score (%),Assigned Label,Source / Model
+human_tech_01,technical,human,human,YES,6.1,Insufficient Text,Operating Systems Textbook Excerpt
+human_tech_02,technical,human,human,YES,5.8,Insufficient Text,Database Internals Lecture
+human_tech_03,technical,human,human,YES,10.3,Insufficient Text,Computer Networks Assignment
+human_tech_04,technical,human,human,YES,3.5,Insufficient Text,Physics Academic Paper Excerpt
+human_tech_05,technical,human,human,YES,3.6,Insufficient Text,Machine Learning Research Paper
+human_tech_06,technical,human,human,YES,13.2,Insufficient Text,Theoretical CS Notes
+human_tech_07,technical,human,human,YES,15.6,Insufficient Text,Cryptography Assignment
+human_tech_08,technical,human,human,YES,5.5,Insufficient Text,Biochemistry University Notes
+human_tech_09,technical,human,human,YES,5.7,Insufficient Text,Complexity Science Article
+human_tech_10,technical,human,human,YES,8.2,Insufficient Text,Distributed Systems Paper
+human_tech_11,technical,human,human,YES,8.3,Insufficient Text,Neural Networks Textbook
+human_tech_12,technical,human,human,YES,7.7,Insufficient Text,Relational Algebra Notes
+human_tech_13,technical,human,human,YES,3.8,Insufficient Text,Thermodynamics Essay
+human_narrative_14,narrative,human,human,YES,9.7,Insufficient Text,History Undergraduate Paper
+human_narrative_15,narrative,human,human,YES,2.7,Insufficient Text,Literary Criticism Essay
+human_narrative_16,narrative,human,human,YES,2.9,Insufficient Text,Economic History Coursework
+human_narrative_17,narrative,human,human,YES,2.4,Insufficient Text,Art History Essay
+human_narrative_18,narrative,human,human,YES,8.2,Insufficient Text,Philosophy Seminar Essay
+human_narrative_19,narrative,human,human,YES,4.1,Insufficient Text,World History Analysis
+human_narrative_20,narrative,human,human,YES,2.5,Insufficient Text,Classics Department Essay
+human_narrative_21,narrative,human,human,YES,2.0,Insufficient Text,Philosophy of Mind Paper
+human_narrative_22,narrative,human,human,YES,4.9,Insufficient Text,Student Reflective Journal
+human_narrative_23,narrative,human,human,YES,1.9,Insufficient Text,Literature Assignment on Orwell
+human_narrative_24,narrative,human,human,YES,2.9,Insufficient Text,Urban Studies Term Paper
+human_narrative_25,narrative,human,human,YES,2.6,Insufficient Text,Personal Nonfiction Essay
+ai_tech_26,technical,ai,ai,YES,94.0,Insufficient Text,GPT-4o Technical Architecture Output
+ai_tech_27,technical,ai,ai,YES,100.0,Insufficient Text,Claude 3.5 Containerization Guide
+ai_tech_28,technical,ai,ai,YES,99.7,Insufficient Text,Gemini Kafka Pipeline Explanation
+ai_tech_29,technical,ai,ai,YES,97.1,Insufficient Text,GPT-4o Agentic AI Overview
+ai_tech_30,technical,ai,ai,YES,99.3,Insufficient Text,Claude 3.5 API Comparison Guide
+ai_tech_31,technical,ai,ai,YES,72.8,Insufficient Text,Gemini Machine Learning Tutorial
+ai_tech_32,technical,ai,ai,YES,99.6,Insufficient Text,GPT-4o Kubernetes Explanation
+ai_tech_33,technical,ai,ai,YES,99.4,Insufficient Text,Claude 3.5 Database Sharding Guide
+ai_tech_34,technical,ai,ai,YES,99.5,Insufficient Text,Gemini WebSocket Architecture
+ai_tech_35,technical,ai,ai,YES,98.5,Insufficient Text,GPT-4o Blockchain Guide
+ai_tech_36,technical,ai,ai,YES,99.3,Insufficient Text,Claude 3.5 Redis Caching Tutorial
+ai_tech_37,technical,ai,ai,YES,98.7,Insufficient Text,Gemini CI/CD Overview
+ai_narrative_38,narrative,ai,ai,YES,100.0,Insufficient Text,GPT-4o Society and Technology Essay
+ai_narrative_39,narrative,ai,ai,YES,94.8,Insufficient Text,Claude 3.5 Climate Policy Essay
+ai_narrative_40,narrative,ai,ai,YES,97.7,Insufficient Text,Gemini Education Value Essay
+ai_narrative_41,narrative,ai,ai,YES,96.1,Insufficient Text,GPT-4o Future of Work Reflection
+ai_narrative_42,narrative,ai,ai,YES,99.3,Insufficient Text,Claude 3.5 Printing Press Historical Essay
+ai_narrative_43,narrative,ai,ai,YES,96.7,Insufficient Text,Gemini Ethics of Bioengineering Essay
+ai_narrative_44,narrative,ai,ai,YES,84.9,Insufficient Text,GPT-4o Mindfulness and Wellness Essay
+ai_narrative_45,narrative,ai,ai,YES,96.4,Insufficient Text,Claude 3.5 Literature and Empathy Essay
+ai_narrative_46,narrative,ai,ai,YES,94.8,Insufficient Text,Gemini Space Exploration Reflection
+ai_narrative_47,narrative,ai,ai,YES,67.7,Insufficient Text,GPT-4o Time Management Essay
+ai_narrative_48,narrative,ai,ai,YES,82.3,Insufficient Text,Claude 3.5 Ancient Athens Democracy Essay
+ai_narrative_49,narrative,ai,ai,YES,99.7,Insufficient Text,Gemini Digital Privacy Essay
+ai_narrative_50,narrative,ai,ai,YES,87.3,Insufficient Text,GPT-4o The Renaissance Historical Essay

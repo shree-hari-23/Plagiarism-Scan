@@ -23,22 +23,23 @@ def test_fingerprint():
     assert sig1 == sig2
     assert sig1 != sig3
 
-@patch("app.core.ml.SentenceTransformer")
-def test_embedding_model(mock_st):
-    mock_output = MagicMock()
-    mock_output.tolist.return_value = [[0.1, 0.2], [0.3, 0.4]]
-    
+@patch("fastembed.TextEmbedding")
+def test_embedding_model(mock_te):
+    import numpy as np
     mock_model = MagicMock()
-    mock_model.encode.return_value = mock_output
-    mock_st.return_value = mock_model
+    mock_arr1 = np.array([0.1, 0.2])
+    mock_arr2 = np.array([0.3, 0.4])
+    mock_model.embed.return_value = [mock_arr1, mock_arr2]
+    mock_te.return_value = mock_model
     
     model = EmbeddingModel.get_instance()
+    model._model = mock_model
     embeddings = model.encode(["test chunk"])
     
-    assert len(embeddings) == 2 # Mock returns 2 vectors
+    assert len(embeddings) == 2
     assert embeddings[0] == [0.1, 0.2]
 
-@patch("app.db.vector.QdrantClient")
+@patch("qdrant_client.QdrantClient")
 def test_vector_db(mock_client_cls):
     from app.db.vector import VectorDB
     
@@ -46,6 +47,7 @@ def test_vector_db(mock_client_cls):
     mock_client_cls.return_value = mock_client
     
     vdb = VectorDB()
+    vdb.client = mock_client
     vdb.upsert_chunks(1, ["chunk1"], [[0.1, 0.2]])
     
     mock_client.upsert.assert_called_once()

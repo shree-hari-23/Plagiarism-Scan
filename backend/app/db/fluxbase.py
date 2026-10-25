@@ -48,7 +48,7 @@ class FluxbaseClient:
             "projectId": self.project_id,
             "query": sql,
         }
-        max_retries = 3
+        max_retries = 2
         data = None
 
         for attempt in range(1, max_retries + 1):
@@ -57,7 +57,7 @@ class FluxbaseClient:
                     self.url,
                     json=payload,
                     headers=self._headers(),
-                    timeout=30,
+                    timeout=8,
                 )
                 if resp.status_code != 200 and not silent:
                     print(f"Fluxbase Error HTTP {resp.status_code}: {resp.text}")
@@ -69,7 +69,8 @@ class FluxbaseClient:
                     time.sleep(0.4 * attempt)
                     continue
                 if not silent:
-                    print(f"Fluxbase network error after {max_retries} attempts: {e}")
+                    print(f"Fluxbase network error after {max_retries} attempts: {e}. Switching to local SQLite fallback...")
+                settings.disable_fluxbase()
                 raise RuntimeError(f"Fluxbase network error: {e}") from e
 
         if not data.get("success"):
@@ -88,12 +89,21 @@ class FluxbaseClient:
         self.execute(sql)
 
     def health_check(self) -> bool:
-        """Returns True if Fluxbase connection is working."""
+        """Returns True if Fluxbase connection is working (fast 3.5s timeout)."""
         try:
-            self.execute("SELECT 1 AS ok;")
-            return True
+            payload = {
+                "projectId": self.project_id,
+                "query": "SELECT 1 AS ok;",
+            }
+            resp = requests.post(
+                self.url,
+                json=payload,
+                headers=self._headers(),
+                timeout=3.5,
+            )
+            return resp.status_code == 200
         except Exception as e:
-            logger.error(f"Fluxbase health check failed: {e}")
+            logger.warning(f"Fluxbase health check failed / timed out: {e}")
             return False
 
     def ensure_bucket(self, bucket_name: str) -> None:
